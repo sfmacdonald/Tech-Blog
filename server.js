@@ -35,8 +35,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
-// require('./controllers/yourController.js')(app); // Adjust the path as necessary
+// Use the router
+app.use('/', homeRoutes);
 
 // Syncing our sequelize models and then starting our Express app
 sequelize.sync({ force: false }).then(() => {
