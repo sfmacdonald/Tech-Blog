@@ -71,7 +71,7 @@ This appllication has the following features and functions:
 
 The github repository may be found at https://github.com/sfmacdonald/Tech-Blog
 
-The live URL for the working website deployed via Heroku is [insert URL]
+The live URL for the working website deployed via Heroku is https://techie-blog-613aca60cde5.herokuapp.com
 
 When accessed, the initial landing page should reflect the following image:
 
