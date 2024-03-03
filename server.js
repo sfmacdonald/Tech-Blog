@@ -6,6 +6,7 @@ const exphbs = require('express-handlebars');
 const path = require('path');
 const sequelize = require('./config/connection'); // Adjust the path as necessary
 require('dotenv').config();
+const homeRoutes = require('./routes/homeRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
