@@ -8,14 +8,22 @@ const sequelize = require('./config/connection'); // Adjust the path as necessar
 require('dotenv').config();
 const homeRoutes = require('./routes/homeRoutes');
 
+// Environment variable validation (Consider using dotenv-safe for this)
+if (!process.env.SESSION_SECRET) {
+  console.error('FATAL ERROR: SESSION_SECRET is not defined.');
+  process.exit(1);
+}
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Session configuration
+// Session configuration with enhanced security
 const sess = {
   secret: process.env.SESSION_SECRET,
   cookie: {
-    maxAge: 15 * 60 * 1000, // 15 minutes;
+    maxAge: 15 * 60 * 1000, // 15 minutes
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    httpOnly: true, // Mitigate risk of client-side script accessing the cookie
   },
   resave: false,
   saveUninitialized: true,
@@ -26,8 +34,15 @@ const sess = {
 
 app.use(session(sess));
 
-// Set up Handlebars.js engine with custom helpers if necessary
-const hbs = exphbs.create({ /* your config and custom helpers */ });
+// Set up Handlebars.js engine with custom helpers
+const hbs = exphbs.create({
+  // Example custom helper
+  helpers: {
+    formatDate: function (date, format) {
+      return moment(date).format(format); // Ensure moment is installed and required
+    },
+  },
+});
 
 // Inform Express.js on which template engine to use
 app.engine('handlebars', hbs.engine);
@@ -41,7 +56,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Use the router
 app.use('/', homeRoutes);
 
+app.get('/login', (req, res) => {
+  // Check if the user is already logged in and redirect to dashboard if they are
+  if (req.session.isLoggedIn) {
+      return res.redirect('/dashboard');
+  }
+  // Otherwise, render the login page
+  res.render('login');
+});
+
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
 // Syncing our sequelize models and then starting our Express app
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
+}).catch(error => {
+  console.error('Unable to connect to the database:', error);
 });

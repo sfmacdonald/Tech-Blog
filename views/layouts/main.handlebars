@@ -10,16 +10,16 @@
 
 <body class="flex-column min-100-vh">
     <nav class="navbar">
-        <ul>
-            <li class="li-inline nav-item"><a href="/">Home</a></li>
-            <li class="li-inline nav-item"><a href="/views/layouts/dashboard.handlebars">Dashboard</a></li>
-            {{#if isLoggedIn}}
-            <li class="li-inline nav-item"><a href="#" id="logout-link">Logout</a></li>
-            {{else}}
-            <li class="li-inline nav-item"><a href="/views/login.handlebars">Login</a></li>
-            {{/if}}
-        </ul>
-    </nav>
+    <ul>
+        <li class="li-inline nav-item"><a href="/">Home</a></li>
+        <li class="li-inline nav-item"><a href="/dashboard">Dashboard</a></li>
+        {{#if isLoggedIn}}
+        <li class="li-inline nav-item"><a href="#" id="logout-link">Logout</a></li>
+        {{else}}
+        <li class="li-inline nav-item"><a href="/login">Login</a></li>
+        {{/if}}
+    </ul>
+</nav>
     <header class="hero">
         <h1 class="app-title"><a href="/">The Techie Blog</a></h1>
     </header>
@@ -27,10 +27,6 @@
     <main class="col-auto">
         {{{body}}}
     </main>
-
-    <footer>
-    </footer>
 </body>
-
+<script src="/js/logout.js"></script>
 </html>
-<script src="/public/js/logout.js"></script>
