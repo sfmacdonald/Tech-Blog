@@ -6,7 +6,7 @@ const exphbs = require('express-handlebars');
 const path = require('path');
 const sequelize = require('./config/connection'); // Adjust the path as necessary
 require('dotenv').config();
-const homeRoutes = require('./routes/homeRoutes');
+const homeRoutes = require('./controllers/homeRoutes.js');
 
 // Environment variable validation (Consider using dotenv-safe for this)
 if (!process.env.SESSION_SECRET) {
