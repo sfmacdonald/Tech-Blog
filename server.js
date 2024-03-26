@@ -4,7 +4,7 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const exphbs = require('express-handlebars');
 const path = require('path');
-const sequelize = require('./config/connection'); // Adjust the path as necessary
+const sequelize = require('./config/connection'); 
 require('dotenv').config();
 const homeRoutes = require('./controllers/homeRoutes.js');
 
@@ -15,7 +15,7 @@ if (!process.env.SESSION_SECRET) {
 }
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3306;
 
 // Session configuration with enhanced security
 const sess = {
