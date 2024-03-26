@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
@@ -6,7 +5,7 @@ const exphbs = require('express-handlebars');
 const path = require('path');
 const sequelize = require('./config/connection'); 
 require('dotenv').config();
-const homeRoutes = require('./controllers/homeRoutes.js');
+const homeRoutes = require('./controllers/homeRoutes');
 
 // Environment variable validation (Consider using dotenv-safe for this)
 if (!process.env.SESSION_SECRET) {
@@ -47,6 +46,7 @@ const hbs = exphbs.create({
 // Inform Express.js on which template engine to use
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views')); 
 
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
