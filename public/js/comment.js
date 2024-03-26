@@ -1,20 +1,25 @@
-document.getElementById('commentForm').addEventListener('submit', async (event) => {
+const commentFormHandler = async function(event) {
     event.preventDefault();
-
-    const postId = document.getElementById('postId').value;
-    const commentText = document.getElementById('commentText').value.trim();
-
-    if (commentText) {
-        const response = await fetch(`/api/posts/${postId}/comments`, {
-            method: 'POST',
-            body: JSON.stringify({ commentText }),
-            headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (response.ok) {
-            document.location.reload(); // Reload the page to show the new comment
-        } else {
-            alert('Failed to add comment.');
+  
+    const postId = document.querySelector('input[name="post-id"]').value;
+    const body = document.querySelector('textarea[name="comment-body"]').value;
+  
+    if (body) {
+      await fetch('/api/comment', {
+        method: 'POST',
+        body: JSON.stringify({
+          postId,
+          body
+        }),
+        headers: {
+          'Content-Type': 'application/json'
         }
+      });
+  
+      document.location.reload();
     }
-});
+  };
+  
+  document
+    .querySelector('#new-comment-form')
+    .addEventListener('submit', commentFormHandler);
