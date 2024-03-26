@@ -2,14 +2,14 @@ const router = require("express").Router();
 const { Post, Comment, User } = require("../models");
 
 // get all posts for homepage
-router.get("/", (req, res) => {
+router.get("/post", (req, res) => {
   Post.findAll({
     include: [User],
   })
     .then((dbPostData) => {
       const posts = dbPostData.map((post) => post.get({ plain: true }));
 
-      res.render("all-posts", { posts });
+      res.render("allPosts", { posts });
     })
     .catch((err) => {
       res.status(500).json(err);
@@ -31,7 +31,7 @@ router.get("/post/:id", (req, res) => {
       if (dbPostData) {
         const post = dbPostData.get({ plain: true });
 
-        res.render("single-post", { post });
+        res.render("singlePost", { post });
       } else {
         res.status(404).end();
       }

@@ -3,7 +3,7 @@ const { Post, Comment, User } = require("../models");
 const withAuth = require("../utils/auth");
 
 // get all posts for homepage
-router.get("/", withAuth, (req, res) => {
+router.get("/post", withAuth, (req, res) => {
   Post.findAll({
     where: {
       userId: req.session.userId
@@ -12,7 +12,7 @@ router.get("/", withAuth, (req, res) => {
     .then((dbPostData) => {
       const posts = dbPostData.map((post) => post.get({ plain: true }));
 
-      res.render("all-posts-admin", {
+      res.render("allAdmin", {
         layout: "dashboard",
         posts
       });
@@ -22,8 +22,8 @@ router.get("/", withAuth, (req, res) => {
       res.redirect("login");
     });
 });
-router.get("/new", withAuth, (req, res) => {
-  res.render("new-post", {
+router.get("/create", withAuth, (req, res) => {
+  res.render("create", {
     layout: "dashboard"
   });
 });
@@ -34,7 +34,7 @@ router.get("/edit/:id", withAuth, (req, res) => {
       if (dbPostData) {
         const post = dbPostData.get({ plain: true });
         
-        res.render("edit-post", {
+        res.render("edit", {
           layout: "dashboard",
           post
         });
