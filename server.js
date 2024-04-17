@@ -4,7 +4,6 @@ const express = require('express'); // Express.js framework for building web app
 const session = require('express-session'); // Express.js middleware for managing user sessions
 const exphbs = require('express-handlebars'); // Handlebars view engine for Express.js
 const routes = require('./controllers'); // Import routes from the controllers directory
-const helpers = require('./utils/helpers'); // Import custom Handlebars helpers
 
 // Import Sequelize and set up the connection
 const sequelize = require('./config/connection');
@@ -12,10 +11,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 // Initialize the Express.js application
 const app = express();
-const PORT = process.env.PORT || 3001;
-
-// Set up the Handlebars view engine with custom helpers
-const hbs = exphbs.create({ helpers });
+const PORT = process.env.PORT || 3308;
 
 // Configure the Express.js session middleware with Sequelize store
 const sess = {
@@ -31,7 +27,6 @@ const sess = {
 app.use(session(sess));
 
 // Set up the view engine and static file serving
-app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -42,5 +37,5 @@ app.use(routes);
 
 // Sync the Sequelize models and start the server
 sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => console.log('Now listening'));
+  app.listen(PORT, () => console.log('I am now listening'));
 });
