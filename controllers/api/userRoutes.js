@@ -1,55 +1,77 @@
-const router = require("express").Router();
-const { Post, Comment, User } = require("../../models/");
-const withAuth = require("../../utils/auth");
+// Import the express Router and User model
+const router = require('express').Router();
+const { User } = require('../../models');
 
-router.post("/", withAuth, (req, res) => {
-  const body = req.body;
-  console.log(req.session.userId);
-  Post.create({ ...body, userId: req.session.userId })
-    .then(newPost => {
-      res.json(newPost);
-    })
-    .catch(err => {
-      res.status(500).json(err);
-    });
-});
-
-router.put("/:id", withAuth, (req, res) => {
-  console.log(req.body, req.params.id)
-  Post.update(req.body, {
-    where: {
-      id: req.params.id
+// POST route for user registration
+// Creates a new user with the provided user_name, email, and password
+// Returns the created user data with a 200 status code on success
+router.post('/', async (req, res) => {
+    try {
+        const userData = await User.create({
+            user_name: req.body.user_name,
+            email: req.body.email,
+            password: req.body.password,
+        }, {
+            individualHooks: true,
+            returning: true,
+        });
+        res.status(200).json(userData)
+    } catch (err) {
+        res.status(400).json(err);
+        console.log(err);
     }
-  })
-    .then(affectedRows => {
-      if (affectedRows > 0) {
-        res.status(200).end();
-      } else {
-        res.status(404).end();
-      }
-    })
-    .catch(err => {
-      res.status(500).json(err);
-    });
 });
 
-router.delete("/:id", withAuth, (req, res) => {
-  console.log(req.body, req.params.id)
-  Post.destroy({
-    where: {
-      id: req.params.id
+// POST route for user login
+// Finds a user with the provided email
+// Checks if the provided password is valid for the found user
+// If login is successful, sets the session user_id and logged_in properties
+// Returns the user data and a success message with a 200 status code on success
+router.post('/login', async (req, res) => {
+    try {
+        const userData = await User.findOne({ where: { email: req.body.email } });
+
+        if (!userData) {
+            res
+               .status(400)
+               .json({ message: 'Incorrect email or password, try again' });
+            return;
+        }
+
+        const validPassword = await userData.checkPassword(req.body.password);
+
+        if (!validPassword) {
+            res
+               .status(400)
+               .json({ message: 'Incorrect password, try again' });
+            return;
+        }
+
+        req.session.save(() => {
+            req.session.user_id = userData.id;
+            req.session.logged_in = true;
+
+            res.json({ user: userData, message: 'You are now logged in!' })
+        });
+
+    } catch (err) {
+        res.status(400).json(err);
+        console.log(err);
     }
-  })
-    .then(affectedRows => {
-      if (affectedRows > 0) {
-        res.status(200).end();
-      } else {
-        res.status(404).end();
-      }
-    })
-    .catch(err => {
-      res.status(500).json(err);
-    });
 });
 
+// POST route for user logout
+// Destroys the session if the user is logged in
+// Returns a 204 status code on success
+router.post('/logout', (req, res) => {
+    if (req.session.logged_in) {
+        req.session.destroy(() => {
+            res.status(204).end();
+        });
+    } else {
+        res.status(404).end();
+    }
+});
+
+// Export the router
 module.exports = router;

@@ -14,7 +14,7 @@ if (!process.env.SESSION_SECRET) {
 }
 
 const app = express();
-const PORT = process.env.PORT || 3306;
+const PORT = process.env.PORT || 3308;
 
 // Session configuration with enhanced security
 const sess = {
