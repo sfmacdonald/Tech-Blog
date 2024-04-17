@@ -1,79 +1,46 @@
-const express = require('express');
-const session = require('express-session');
+// Import required Node.js modules
+const path = require('path'); // Path module for working with file and directory paths
+const express = require('express'); // Express.js framework for building web applications
+const session = require('express-session'); // Express.js middleware for managing user sessions
+const exphbs = require('express-handlebars'); // Handlebars view engine for Express.js
+const routes = require('./controllers'); // Import routes from the controllers directory
+const helpers = require('./utils/helpers'); // Import custom Handlebars helpers
+
+// Import Sequelize and set up the connection
+const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const exphbs = require('express-handlebars');
-const path = require('path');
-const sequelize = require('./config/connection'); 
-require('dotenv').config();
-const homeRoutes = require('./controllers/homeRoutes');
 
-// Environment variable validation (Consider using dotenv-safe for this)
-if (!process.env.SESSION_SECRET) {
-  console.error('FATAL ERROR: SESSION_SECRET is not defined.');
-  process.exit(1);
-}
-
+// Initialize the Express.js application
 const app = express();
-const PORT = process.env.PORT || 3308;
+const PORT = process.env.PORT || 3001;
 
-// Session configuration with enhanced security
+// Set up the Handlebars view engine with custom helpers
+const hbs = exphbs.create({ helpers });
+
+// Configure the Express.js session middleware with Sequelize store
 const sess = {
-  secret: process.env.SESSION_SECRET,
-  cookie: {
-    maxAge: 15 * 60 * 1000, // 15 minutes
-    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-    httpOnly: true, // Mitigate risk of client-side script accessing the cookie
-  },
+  secret: 'Super secret secret',
+  cookie: {},
   resave: false,
   saveUninitialized: true,
   store: new SequelizeStore({
-    db: sequelize,
-  }),
+    db: sequelize
+  })
 };
 
 app.use(session(sess));
 
-// Set up Handlebars.js engine with custom helpers
-const hbs = exphbs.create({
-  // Example custom helper
-  helpers: {
-    formatDate: function (date, format) {
-      return moment(date).format(format); // Ensure moment is installed and required
-    },
-  },
-});
-
-// Inform Express.js on which template engine to use
+// Set up the view engine and static file serving
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, 'views')); 
-
-// Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Use the router
-app.use('/', homeRoutes);
+// Use the routes imported from the controllers directory
+app.use(routes);
 
-app.get('/login', (req, res) => {
-  // Check if the user is already logged in and redirect to dashboard if they are
-  if (req.session.isLoggedIn) {
-      return res.redirect('/dashboard');
-  }
-  // Otherwise, render the login page
-  res.render('login');
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong!');
-});
-
-// Syncing our sequelize models and then starting our Express app
+// Sync the Sequelize models and start the server
 sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
-}).catch(error => {
-  console.error('Unable to connect to the database:', error);
+  app.listen(PORT, () => console.log('Now listening'));
 });
