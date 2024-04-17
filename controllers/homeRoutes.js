@@ -9,12 +9,16 @@ router.get("/post", (req, res) => {
     .then((dbPostData) => {
       const posts = dbPostData.map((post) => post.get({ plain: true }));
 
-      res.render("allPosts", { posts });
+      res.render("allPosts", { 
+        posts, 
+        isLoggedIn: req.session.loggedIn
+      });
     })
     .catch((err) => {
       res.status(500).json(err);
     });
 });
+
 
 // get single post
 router.get("/post/:id", (req, res) => {
