@@ -9,12 +9,12 @@ if (process.env.JAWSDB_URL) {
   // If JAWSDB_URL is not set, using the individual environment variables to connect to the database
   sequelize = new Sequelize(
     process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
+    process.env.DB_USERNAME,
+    process.env.DB_PW,
     {
       host: 'localhost',
       dialect: 'mysql',
-      port: 3308
+      port: 3306
     }
   );
 }
