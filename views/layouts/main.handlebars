@@ -2,33 +2,37 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Tech Blog</title>
-  <link rel="stylesheet" href="/public/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Tech Blog</title>
+    <link rel="stylesheet" href="/css/jass.css">
+    <link rel="stlyesheet" href="/css/style.css">
 </head>
 
-<body class="flex-column min-100-vh">
-  <nav class="navbar">
-    <ul>
-      <li class="li-inline nav-item"><a href="/">Home</a></li>
-      <li class="li-inline nav-item"><a href="/views/layouts/dashboard.handlebars">Dashboard</a></li>
-      <li class="li-inline nav-item"><a href="/views/login.handlebars">Login</a></li>
-      <li class="li-inline nav-item"><a href="#" id="logout-link">Logout</a></li>
-    </ul>
-  </nav>
-  <header class="hero">
-    <h1 class="app-title"><a href="/">The Tech Blog</a></h1>
-  </header>
+<body>
+    <header class="display-flex justify-space-between align-center p-2">
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/login">Login</a></li>
+            </ul>
+            <h1>{{pageTitle}}</h1>
+        </nav>
 
-  <main class="col-auto">
-    {{{body}}}
-  </main>
+        {{!-- {{#if logged_in}} --}}
+        {{!-- {{/if}} --}}
+    </header>
+    <main class="container container-fluid mt-5">
+        {{{ body }}}
+    </main>
+    <footer>
 
-  <footer class="flex-row justify-center">
-    &copy; The Tech Blog Folks
-  </footer>
+    </footer>
+
+    {{#if logged_in}}
+    <script src="/js/logout.js"></script>
+    {{/if}}
 </body>
 
 </html>
-<script src="/public/js/logout.js"></script>
