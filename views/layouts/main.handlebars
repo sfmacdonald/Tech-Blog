@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Tech Blog</title>
-    <link rel="stylesheet" href="/css/jass.css">
-    <link rel="stlyesheet" href="/css/style.css">
+    <title> The Techie Blog</title>
+    <!--<link rel="stylesheet" href="/css/jass.css">-->
+    <link rel="stlyesheet" href="/public/css/style.css">
 </head>
 
 <body>
@@ -14,8 +14,8 @@
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/dashboard">Dashboard</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="/views/dashboard.handlebars">Dashboard</a></li>
+                <li><a href="/views/login.handlebars">Login</a></li>
             </ul>
             <h1>{{pageTitle}}</h1>
         </nav>
@@ -31,7 +31,7 @@
     </footer>
 
     {{#if logged_in}}
-    <script src="/js/logout.js"></script>
+    <script src="/public/js/logout.js"></script>
     {{/if}}
 </body>
 
