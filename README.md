@@ -76,13 +76,3 @@ The live URL for the working website deployed via Heroku is https://techie-blog-
 When accessed, the initial landing page should reflect the following image:
 
 ![Tech Blog]([insert png])
-
-## Testing
-
-Testing may be accomplished manually by:
-
-1. 
-2. 
-3. 
-4. 
-5. 
