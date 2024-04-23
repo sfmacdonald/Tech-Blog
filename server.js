@@ -2,8 +2,8 @@
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const { engine } = require('express-handlebars'); // Update to use destructuring if using latest version of express-handlebars
-const routes = require('./controllers');
+const { engine } = require('express-handlebars'); // Using destructuring for express-handlebars
+const routes = require('./controllers'); // Assuming this file contains the proper route setups
 
 // Import Sequelize and set up the connection
 const sequelize = require('./config/connection');
@@ -28,7 +28,7 @@ app.use(session(sess));
 
 // Set up the view engine for Handlebars
 app.engine('handlebars', engine({
-  defaultLayout: 'main' // Specify your default layout if it's not set
+  defaultLayout: 'main' // Confirm the default layout file is named 'main.handlebars'
 }));
 app.set('view engine', 'handlebars');
 
@@ -42,10 +42,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Use the routes imported from the controllers directory
 app.use(routes);
 
-// Error handling middleware
+// Generic error handler - improved to provide HTTP status code and message
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+  console.error('Error:', err); // Log error message and stack for debugging
+  const status = err.status || 500;
+  const message = err.message || "Something went wrong on the server!";
+  res.status(status).send(message);
 });
 
 // Sync the Sequelize models and start the server
