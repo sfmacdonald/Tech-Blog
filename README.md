@@ -75,4 +75,4 @@ The live URL for the working website deployed via Heroku is https://techie-blog-
 
 When accessed, the initial landing page should reflect the following image:
 
-![Tech Blog]([insert png])
+![Tech Blog](<./public/img/Screenshot 2024-04-23 at 10.33.44 AM.png>)
